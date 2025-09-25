@@ -180,7 +180,6 @@ class ViserLeader():
                     mapped_joint_name = joint_mapping.get(joint_name, joint_name)
                     action[f"{mapped_joint_name}.pos"] = position
             
-            print(f"Retrieved joint positions: {joint_positions}")
             return action 
             
         except (subprocess.CalledProcessError, json.JSONDecodeError, subprocess.TimeoutExpired) as e:

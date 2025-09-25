@@ -11,9 +11,9 @@ from record_a2 import record_loop
 from lerobot.processor.factory import make_default_processors
 from lerobot.cameras.configs import ColorMode, Cv2Rotation
 
-NUM_EPISODES = 30
+NUM_EPISODES = 5
 FPS = 15
-EPISODE_TIME_SEC = 60
+EPISODE_TIME_SEC = 20
 RESET_TIME_SEC = 10
 TASK_DESCRIPTION = "My task description"
 
