@@ -51,3 +51,9 @@ source ~/miniconda3/bin/activate; conda activate lerobot
 cd scratchpad
 python3 viser_record_a2.py
 ```
+
+## Train
+```
+source ~/miniconda3/bin/activate; conda activate lerobot
+lerobot-train   --dataset.repo_id=cnboonhan-htx/a2   --policy.type=act   --output_dir=outputs/train/act_so101_test   --job_name=act_so101_test   --policy.device=cuda   --wandb.enable=true   --policy.repo_id=cnboonhan-htx/a2_act
+```
