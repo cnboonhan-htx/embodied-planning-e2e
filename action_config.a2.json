@@ -1,0 +1,70 @@
+{
+    "project_name": "a2_teleop",
+    "epsisode_name": "episode_1",
+    "label": "action",
+    "urdf_path": "/home/cnboonhan/teleop_workspace/genie_robot_description/urdf/raise_a2_t2d0_flagship/model.urdf",
+    "custom_joints": [
+        {
+            "name": "left_thumb_0",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "left_thumb_1",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "left_index",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "left_middle",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "left_ring",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "left_pinky",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "right_thumb_0",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "right_thumb_1",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "right_index",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "right_middle",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "right_ring",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        },
+        {
+            "name": "right_pinky",
+            "type": "revolute",
+            "limits": [0.0, 2000.0]
+        }
+    ],
+    "api_port": 5000,
+    "urdf_viewer_port": 8080
+}

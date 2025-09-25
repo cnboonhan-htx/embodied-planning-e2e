@@ -1,0 +1,2 @@
+ACTION=="remove", SUBSYSTEM=="tty", ENV{ID_MODEL_ID}=="55d3", ENV{ID_VENDOR_ID}=="1a86", ENV{ID_SERIAL_SHORT}=="5A46085578", RUN+="/usr/bin/logger goodbye"
+ACTION=="add", SUBSYSTEM=="tty", ENV{ID_MODEL_ID}=="55d3", ENV{ID_VENDOR_ID}=="1a86", ENV{ID_SERIAL_SHORT}=="5A46085578", SYMLINK+="humanoid_leader_arm_left", RUN+="/usr/bin/logger hello"
