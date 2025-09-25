@@ -1,4 +1,5 @@
 from lerobot.cameras.realsense.configuration_realsense import RealSenseCameraConfig
+from lerobot.cameras.realsense.camera_realsense import RealSenseCamera
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 from lerobot.datasets.utils import hw_to_dataset_features
 from viser_leader_a2 import ViserLeader
@@ -21,7 +22,9 @@ camera_config = {"front": RealSenseCameraConfig("211622068536", ColorMode.RGB, F
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
 
-robot = ViserFollower()
+camera = RealSenseCamera(camera_config["front"])
+
+robot = ViserFollower(camera_config)
 teleop = ViserLeader()
 
 # Configure the dataset features

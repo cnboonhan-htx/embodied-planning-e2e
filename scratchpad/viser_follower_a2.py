@@ -7,19 +7,25 @@ from typing import Any
 
 from lerobot.cameras.utils import make_cameras_from_configs
 from lerobot.utils.errors import DeviceAlreadyConnectedError, DeviceNotConnectedError
-
+from lerobot.cameras.configs import CameraConfig
 from lerobot.robots.robot import Robot
 from lerobot.robots.utils import ensure_safe_goal_position
 
 logger = logging.getLogger(__name__)
 
 
+class ViserFollowerConfig():
+    cameras: dict[str, CameraConfig]
+    def __init__(self, cameras: dict[str, CameraConfig]):
+        self.cameras = cameras
+
 class ViserFollower(Robot):
 
     name = "viser_follower"
 
-    def __init__(self):
-        self.cameras = {}
+    def __init__(self, cameras: dict[str, CameraConfig]):
+        self.config = ViserFollowerConfig(cameras=cameras)
+        self.cameras = make_cameras_from_configs(cameras)
         self.id = "viser_follower"
         self.api_port = 5001
         # super().__init__()
@@ -71,9 +77,17 @@ class ViserFollower(Robot):
 
     @property
     def is_connected(self) -> bool:
-        return self.bus.is_connected and all(cam.is_connected for cam in self.cameras.values())
+        return all(cam.is_connected for cam in self.cameras.values())
 
     def connect(self, calibrate: bool = True) -> None:
+        # Connect cameras
+        for cam_name, cam in self.cameras.items():
+            try:
+                cam.connect()
+                logger.info(f"Connected camera {cam_name}")
+            except Exception as e:
+                logger.warning(f"Failed to connect camera {cam_name}: {e}")
+        
         logger.info(f"{self} connected.")
 
     @property
@@ -150,7 +164,14 @@ class ViserFollower(Robot):
                     mapped_joint_name = joint_mapping.get(joint_name, joint_name)
                     observation[f"{mapped_joint_name}.pos"] = position
             
-            print(f"Retrieved joint positions: {joint_positions}")
+            
+            # Add camera data to observation
+            for cam_key, cam in self.cameras.items():
+                start = time.perf_counter()
+                observation[cam_key] = cam.async_read()
+                dt_ms = (time.perf_counter() - start) * 1e3
+                logger.debug(f"{self} read {cam_key}: {dt_ms:.1f}ms")
+            
             return observation
             
         except (subprocess.CalledProcessError, json.JSONDecodeError, subprocess.TimeoutExpired) as e:
