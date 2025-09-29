@@ -168,9 +168,26 @@ class ViserFollower(Robot):
             # Add camera data to observation
             for cam_key, cam in self.cameras.items():
                 start = time.perf_counter()
-                observation[cam_key] = cam.async_read()
-                dt_ms = (time.perf_counter() - start) * 1e3
-                logger.debug(f"{self} read {cam_key}: {dt_ms:.1f}ms")
+                max_retries = 3
+                retry_count = 0
+                
+                while retry_count < max_retries:
+                    try:
+                        observation[cam_key] = cam.async_read()
+                        dt_ms = (time.perf_counter() - start) * 1e3
+                        logger.debug(f"{self} read {cam_key}: {dt_ms:.1f}ms")
+                        break  # Success, exit retry loop
+                    except TimeoutError as e:
+                        retry_count += 1
+                        if retry_count < max_retries:
+                            logger.warning(f"Timeout reading camera {cam_key}, retrying ({retry_count}/{max_retries}): {e}")
+                            time.sleep(0.01)  # Brief delay before retry
+                        else:
+                            logger.error(f"Failed to read camera {cam_key} after {max_retries} attempts: {e}")
+                            # Skip this camera - don't add to observation
+                    except Exception as e:
+                        logger.warning(f"Error reading camera {cam_key}: {e}")
+                        break  # Don't retry for other errors
             
             return observation
             

@@ -11,11 +11,12 @@ from record_a2 import record_loop
 from lerobot.processor.factory import make_default_processors
 from lerobot.cameras.configs import ColorMode, Cv2Rotation
 
-NUM_EPISODES = 5
+NUM_EPISODES = 30
 FPS = 15
-EPISODE_TIME_SEC = 20
+EPISODE_TIME_SEC = 30
 RESET_TIME_SEC = 10
 TASK_DESCRIPTION = "My task description"
+REPO_NAME = "cnboonhan-htx/a2-wave-2909"
 
 # Create the robot and teleoperator configurations
 camera_config = {"front": RealSenseCameraConfig("211622068536", ColorMode.RGB, False, Cv2Rotation.NO_ROTATION, 0, width=640, height=480, fps=FPS)  }
@@ -37,15 +38,32 @@ print("Action features:", action_features)
 print("Observation features:", obs_features)
 print("Dataset features keys:", list(dataset_features.keys()))
 
-# Create the dataset
-dataset = LeRobotDataset.create(
-    repo_id="cnboonhan-htx/a2",
-    fps=FPS,
-    features=dataset_features,
-    robot_type=robot.name,
-    use_videos=True,
-    image_writer_threads=4,
-)
+# Create or load existing dataset
+import os
+from pathlib import Path
+
+# Check if dataset exists locally
+dataset_root = Path(f"~/data_collection/{REPO_NAME}").expanduser()
+dataset_exists = dataset_root.exists() and (dataset_root / "meta" / "info.json").exists()
+
+if dataset_exists:
+    # Case 1: Dataset already exists on disk - load it
+    print("✅ Found existing dataset on disk, loading...")
+    dataset = LeRobotDataset(REPO_NAME, root=str(dataset_root))
+    print("✅ Loaded existing dataset, will append new episodes")
+else:
+    # Case 2: Dataset doesn't exist - create new one
+    print("📝 No existing dataset found, creating new dataset...")
+    dataset = LeRobotDataset.create(
+        repo_id=REPO_NAME,
+        root=str(dataset_root),
+        fps=FPS,
+        features=dataset_features,
+        robot_type=robot.name,
+        use_videos=True,
+        image_writer_threads=4,
+    )
+    print("✅ Created new dataset")
 
 # Initialize the keyboard listener and rerun visualization
 _, events = init_keyboard_listener()
