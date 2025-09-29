@@ -24,8 +24,8 @@ from lerobot.datasets.utils import build_dataset_frame, combine_feature_dicts
 
 # Using grpcurl instead of gRPC imports
 
-POLICY_PATH = "cnboonhan-htx/a2_act_wave"
-REPO_NAME = "cnboonhan-htx/a2-wave-2909"
+POLICY_PATH = "cnboonhan-htx/a2_act_wave-right-hand"
+REPO_NAME = "cnboonhan-htx/a2-wave-2909-right-hand"
 FPS = 15
 TASK = "wave"
 ROBOT_SERVER_GRPC_URL = "localhost:5000"
@@ -71,15 +71,20 @@ def map_action_values_to_joints(action_values):
     """Map action values from predict_action to joint names for gRPC."""
     # Joint mapping from action_values indices to joint names
     # Based on the sample values provided: 26 values total
+    # joint_names = [
+    #     "idx13_left_arm_joint1", "idx14_left_arm_joint2", "idx15_left_arm_joint3", 
+    #     "idx16_left_arm_joint4", "idx17_left_arm_joint5", "idx18_left_arm_joint6", 
+    #     "idx19_left_arm_joint7", "idx20_right_arm_joint1", "idx21_right_arm_joint2", 
+    #     "idx22_right_arm_joint3", "idx23_right_arm_joint4", "idx24_right_arm_joint5", 
+    #     "idx25_right_arm_joint6", "idx26_right_arm_joint7", "left_thumb_0", 
+    #     "left_thumb_1", "left_index", "left_middle", "left_ring", "left_pinky", 
+    #     "right_thumb_0", "right_thumb_1", "right_index", "right_middle", 
+    #     "right_ring", "right_pinky"
+    # ]
     joint_names = [
-        "idx13_left_arm_joint1", "idx14_left_arm_joint2", "idx15_left_arm_joint3", 
-        "idx16_left_arm_joint4", "idx17_left_arm_joint5", "idx18_left_arm_joint6", 
-        "idx19_left_arm_joint7", "idx20_right_arm_joint1", "idx21_right_arm_joint2", 
+        "idx20_right_arm_joint1", "idx21_right_arm_joint2", 
         "idx22_right_arm_joint3", "idx23_right_arm_joint4", "idx24_right_arm_joint5", 
-        "idx25_right_arm_joint6", "idx26_right_arm_joint7", "left_thumb_0", 
-        "left_thumb_1", "left_index", "left_middle", "left_ring", "left_pinky", 
-        "right_thumb_0", "right_thumb_1", "right_index", "right_middle", 
-        "right_ring", "right_pinky"
+        "idx25_right_arm_joint6", "idx26_right_arm_joint7"
     ]
     
     joint_updates = {}
