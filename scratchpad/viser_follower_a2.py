@@ -6,7 +6,6 @@ from functools import cached_property
 from typing import Any
 
 from lerobot.cameras.utils import make_cameras_from_configs
-from lerobot.utils.errors import DeviceAlreadyConnectedError, DeviceNotConnectedError
 from lerobot.cameras.configs import CameraConfig
 from lerobot.robots.robot import Robot
 from lerobot.robots.utils import ensure_safe_goal_position
@@ -199,6 +198,4 @@ class ViserFollower(Robot):
         pass
 
     def disconnect(self):
-        if not self.is_connected:
-            raise DeviceNotConnectedError(f"{self} is not connected.")
         logger.info(f"{self} disconnected.")
