@@ -26,7 +26,7 @@ python3 ../scratchpad/viser_record_so100.py
 
 ## Run A2 Collection
 ```
-# Open 6 terminals, each paragraph is a new terminal
+# Open 8 terminals, each paragraph is a new terminal
 
 source embodied-ai-toolkit/.venv/bin/activate
 uv run embodied-ai-toolkit/main.py  --config_path action_config.a2.json 
@@ -64,4 +64,9 @@ cd scratchpad
 python3 viser_record_a2.py
 
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
+# Train dataset
+# TODO: Add command
+
+
+# Inference
 ```

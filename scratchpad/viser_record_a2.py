@@ -43,7 +43,7 @@ import os
 from pathlib import Path
 
 # Check if dataset exists locally
-dataset_root = Path(f"~/data_collection/{REPO_NAME}").expanduser()
+dataset_root = Path(f"/home/cnboonhan/data_collection/{REPO_NAME}").expanduser()
 dataset_exists = dataset_root.exists() and (dataset_root / "meta" / "info.json").exists()
 
 if dataset_exists:
