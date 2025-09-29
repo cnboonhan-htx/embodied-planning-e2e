@@ -69,4 +69,5 @@ python3 viser_record_a2.py
 
 
 # Inference
+python3 inference_a2.py
 ```

@@ -32,13 +32,13 @@ class ViserFollower(Robot):
     @property
     def _motors_ft(self) -> dict[str, type]:
         return {
-            f"idx13_left_arm_joint1.pos": float, 
-            f"idx14_left_arm_joint2.pos": float, 
-            f"idx15_left_arm_joint3.pos": float, 
-            f"idx16_left_arm_joint4.pos": float, 
-            f"idx17_left_arm_joint5.pos": float, 
-            f"idx18_left_arm_joint6.pos": float, 
-            f"idx19_left_arm_joint7.pos": float, 
+            # f"idx13_left_arm_joint1.pos": float, 
+            # f"idx14_left_arm_joint2.pos": float, 
+            # f"idx15_left_arm_joint3.pos": float, 
+            # f"idx16_left_arm_joint4.pos": float, 
+            # f"idx17_left_arm_joint5.pos": float, 
+            # f"idx18_left_arm_joint6.pos": float, 
+            # f"idx19_left_arm_joint7.pos": float, 
             f"idx20_right_arm_joint1.pos": float, 
             f"idx21_right_arm_joint2.pos": float, 
             f"idx22_right_arm_joint3.pos": float, 
@@ -46,18 +46,18 @@ class ViserFollower(Robot):
             f"idx24_right_arm_joint5.pos": float, 
             f"idx25_right_arm_joint6.pos": float, 
             f"idx26_right_arm_joint7.pos": float,
-            f"left_thumb_0.pos": float,
-            f"left_thumb_1.pos": float,
-            f"left_index.pos": float,
-            f"left_middle.pos": float,
-            f"left_ring.pos": float,
-            f"left_pinky.pos": float,
-            f"right_thumb_0.pos": float,
-            f"right_thumb_1.pos": float,
-            f"right_index.pos": float,
-            f"right_middle.pos": float,
-            f"right_ring.pos": float,
-            f"right_pinky.pos": float
+            # f"left_thumb_0.pos": float,
+            # f"left_thumb_1.pos": float,
+            # f"left_index.pos": float,
+            # f"left_middle.pos": float,
+            # f"left_ring.pos": float,
+            # f"left_pinky.pos": float,
+            # f"right_thumb_0.pos": float,
+            # f"right_thumb_1.pos": float,
+            # f"right_index.pos": float,
+            # f"right_middle.pos": float,
+            # f"right_ring.pos": float,
+            # f"right_pinky.pos": float
         }
 
     @property
@@ -124,13 +124,13 @@ class ViserFollower(Robot):
             
             # Joint mapping from gRPC response keys to expected joint names
             joint_mapping = {
-                "idx13_left_arm_joint1": "idx13_left_arm_joint1",
-                "idx14_left_arm_joint2": "idx14_left_arm_joint2", 
-                "idx15_left_arm_joint3": "idx15_left_arm_joint3",
-                "idx16_left_arm_joint4": "idx16_left_arm_joint4",
-                "idx17_left_arm_joint5": "idx17_left_arm_joint5",
-                "idx18_left_arm_joint6": "idx18_left_arm_joint6",
-                "idx19_left_arm_joint7": "idx19_left_arm_joint7",
+                # "idx13_left_arm_joint1": "idx13_left_arm_joint1",
+                # "idx14_left_arm_joint2": "idx14_left_arm_joint2", 
+                # "idx15_left_arm_joint3": "idx15_left_arm_joint3",
+                # "idx16_left_arm_joint4": "idx16_left_arm_joint4",
+                # "idx17_left_arm_joint5": "idx17_left_arm_joint5",
+                # "idx18_left_arm_joint6": "idx18_left_arm_joint6",
+                # "idx19_left_arm_joint7": "idx19_left_arm_joint7",
                 "idx20_right_arm_joint1": "idx20_right_arm_joint1",
                 "idx21_right_arm_joint2": "idx21_right_arm_joint2",
                 "idx22_right_arm_joint3": "idx22_right_arm_joint3",
@@ -138,18 +138,18 @@ class ViserFollower(Robot):
                 "idx24_right_arm_joint5": "idx24_right_arm_joint5",
                 "idx25_right_arm_joint6": "idx25_right_arm_joint6",
                 "idx26_right_arm_joint7": "idx26_right_arm_joint7",
-                "left_thumb_0": "left_thumb_0",
-                "left_thumb_1": "left_thumb_1",
-                "left_index": "left_index",
-                "left_middle": "left_middle",
-                "left_ring": "left_ring",
-                "left_pinky": "left_pinky",
-                "right_thumb_0": "right_thumb_0",
-                "right_thumb_1": "right_thumb_1",
-                "right_index": "right_index",
-                "right_middle": "right_middle",
-                "right_ring": "right_ring",
-                "right_pinky": "right_pinky"
+                # "left_thumb_0": "left_thumb_0",
+                # "left_thumb_1": "left_thumb_1",
+                # "left_index": "left_index",
+                # "left_middle": "left_middle",
+                # "left_ring": "left_ring",
+                # "left_pinky": "left_pinky",
+                # "right_thumb_0": "right_thumb_0",
+                # "right_thumb_1": "right_thumb_1",
+                # "right_index": "right_index",
+                # "right_middle": "right_middle",
+                # "right_ring": "right_ring",
+                # "right_pinky": "right_pinky"
             }
             
             for joint_name, position in joint_positions.items():
