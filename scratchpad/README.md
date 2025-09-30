@@ -65,8 +65,7 @@ python3 viser_record_a2.py
 
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
 # Train dataset
-# TODO: Add command
-
+lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand --policy.type=diffusion --output_dir=outputs/train/cnboonhan-htx/a2-pnp-3009-right-hand --job_name=a2-pip-3009-right-hand --policy.device=cuda --wandb.enable=true --policy.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand
 
 # Inference
 python3 inference_a2.py

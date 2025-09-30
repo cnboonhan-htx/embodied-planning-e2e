@@ -11,12 +11,12 @@ from record_a2 import record_loop
 from lerobot.processor.factory import make_default_processors
 from lerobot.cameras.configs import ColorMode, Cv2Rotation
 
-NUM_EPISODES = 30
+NUM_EPISODES = 25
 FPS = 15
 EPISODE_TIME_SEC = 30
 RESET_TIME_SEC = 10
 TASK_DESCRIPTION = "My task description"
-REPO_NAME = "cnboonhan-htx/a2-wave-2909-right-hand"
+REPO_NAME = "cnboonhan-htx/a2-pnp-3009-right-hand"
 
 # Create the robot and teleoperator configurations
 camera_config = {"front": RealSenseCameraConfig("211622068536", ColorMode.RGB, False, Cv2Rotation.NO_ROTATION, 0, width=640, height=480, fps=FPS)  }

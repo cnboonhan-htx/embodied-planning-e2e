@@ -29,6 +29,7 @@ REPO_NAME = "cnboonhan-htx/a2-wave-2909-right-hand"
 FPS = 15
 TASK = "wave"
 ROBOT_SERVER_GRPC_URL = "localhost:5000"
+ACTION_STEPS = 8
 print(f"Loading policy from {POLICY_PATH}")
 
 def send_joint_updates_grpc(joint_updates):
@@ -139,25 +140,42 @@ postprocessor.reset()
 start_time = time.perf_counter()
 loop_counter = 0
 target_frame_time = 1.0 / FPS  # Target time per frame in seconds
+
+# Exponential smoothing parameters
+alpha = 0.3  # Smoothing factor (0 < alpha <= 1, smaller = more smoothing)
+smoothed_action_values = None  # Will be initialized with first action
     
 try:
     while True:
         loop_start = time.perf_counter()
-        obs = robot.get_observation()
-        obs_processed = robot_observation_processor(obs)
-        observation_frame = build_dataset_frame(dataset.features, obs_processed, prefix="observation")
-        action_values = predict_action(
-            observation=observation_frame,
-            policy=policy,
-            device=get_safe_torch_device(policy.config.device),
-            preprocessor=preprocessor,
-            postprocessor=postprocessor,
-            use_amp=policy.config.use_amp,
-            task=TASK,
-            robot_type="a2",
-        )
+        all_action_values = []
+        for i in range(ACTION_STEPS):
+            obs = robot.get_observation()
+            obs_processed = robot_observation_processor(obs)
+            observation_frame = build_dataset_frame(dataset.features, obs_processed, prefix="observation")
+            action_values = predict_action(
+                observation=observation_frame,
+                policy=policy,
+                device=get_safe_torch_device(policy.config.device),
+                preprocessor=preprocessor,
+                postprocessor=postprocessor,
+                use_amp=policy.config.use_amp,
+                task=TASK,
+                robot_type="a2",
+            )
+            all_action_values.append(action_values)
+        
+        # Apply exponential smoothing
+        current_action = all_action_values[0]  # Use first action from current batch
+        
+        if smoothed_action_values is None:
+            # Initialize with first action
+            smoothed_action_values = current_action.clone()
+        else:
+            # Apply exponential smoothing: S_t = alpha * A_t + (1 - alpha) * S_{t-1}
+            smoothed_action_values = alpha * current_action + (1 - alpha) * smoothed_action_values
 
-        joint_updates = map_action_values_to_joints(action_values)
+        joint_updates = map_action_values_to_joints(smoothed_action_values)
         send_joint_updates_grpc(joint_updates)
         
         # Control loop timing to match FPS

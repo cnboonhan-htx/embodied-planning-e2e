@@ -57,12 +57,12 @@ class ViserLeader():
             # f"left_middle.pos": float,
             # f"left_ring.pos": float,
             # f"left_pinky.pos": float,
-            # f"right_thumb_0.pos": float,
-            # f"right_thumb_1.pos": float,
-            # f"right_index.pos": float,
-            # f"right_middle.pos": float,
-            # f"right_ring.pos": float,
-            # f"right_pinky.pos": float
+            f"right_thumb_0.pos": float,
+            f"right_thumb_1.pos": float,
+            f"right_index.pos": float,
+            f"right_middle.pos": float,
+            f"right_ring.pos": float,
+            f"right_pinky.pos": float
         }
 
     @property
@@ -161,12 +161,12 @@ class ViserLeader():
                 # "left_middle": "left_middle",
                 # "left_ring": "left_ring",
                 # "left_pinky": "left_pinky",
-                # "right_thumb_0": "right_thumb_0",
-                # "right_thumb_1": "right_thumb_1",
-                # "right_index": "right_index",
-                # "right_middle": "right_middle",
-                # "right_ring": "right_ring",
-                # "right_pinky": "right_pinky"
+                "right_thumb_0": "right_thumb_0",
+                "right_thumb_1": "right_thumb_1",
+                "right_index": "right_index",
+                "right_middle": "right_middle",
+                "right_ring": "right_ring",
+                "right_pinky": "right_pinky"
             }
             
             for joint_name, position in joint_positions.items():
