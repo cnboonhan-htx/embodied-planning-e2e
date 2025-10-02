@@ -2,60 +2,49 @@ from lerobot.cameras.realsense.configuration_realsense import RealSenseCameraCon
 from lerobot.cameras.realsense.camera_realsense import RealSenseCamera
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 from lerobot.datasets.utils import hw_to_dataset_features
-from viser_leader_a2 import ViserLeader
-from viser_follower_a2 import ViserFollower
+from lerobot.robots.robot import Robot
 from lerobot.utils.control_utils import init_keyboard_listener
 from lerobot.utils.utils import log_say
 from lerobot.utils.visualization_utils import init_rerun
-from record_a2 import record_loop
+from utils_a2 import record_loop
 from lerobot.processor.factory import make_default_processors
 from lerobot.cameras.configs import ColorMode, Cv2Rotation
+from pathlib import Path
+from utils_a2 import ViserFollower, ViserLeader, camera_config
+
 
 NUM_EPISODES = 25
 FPS = 15
-EPISODE_TIME_SEC = 30
-RESET_TIME_SEC = 10
+EPISODE_TIME_SEC = 60
+RESET_TIME_SEC = 5
 TASK_DESCRIPTION = "My task description"
-REPO_NAME = "cnboonhan-htx/a2-pnp-3009-right-hand"
-
-# Create the robot and teleoperator configurations
-camera_config = {"front": RealSenseCameraConfig("211622068536", ColorMode.RGB, False, Cv2Rotation.NO_ROTATION, 0, width=640, height=480, fps=FPS)  }
+POLICY_REPO_NAME = "cnboonhan-htx/example"
+DATA_REPO_NAME = "cnboonhan-htx/example"
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
-
 camera = RealSenseCamera(camera_config["front"])
-
 robot = ViserFollower(camera_config)
 teleop = ViserLeader()
-
-# Configure the dataset features
 action_features = hw_to_dataset_features(robot.action_features, "action")
 obs_features = hw_to_dataset_features(robot.observation_features, "observation")
 dataset_features = {**action_features, **obs_features}
 
-# Debug: Print the features to verify cameras are included
 print("Action features:", action_features)
 print("Observation features:", obs_features)
 print("Dataset features keys:", list(dataset_features.keys()))
 
-# Create or load existing dataset
-import os
-from pathlib import Path
-
-# Check if dataset exists locally
-dataset_root = Path(f"/home/cnboonhan/data_collection/{REPO_NAME}").expanduser()
+dataset_root = Path(f"/home/cnboonhan/data_collection/{DATA_REPO_NAME}").expanduser()
 dataset_exists = dataset_root.exists() and (dataset_root / "meta" / "info.json").exists()
-
 if dataset_exists:
     # Case 1: Dataset already exists on disk - load it
     print("✅ Found existing dataset on disk, loading...")
-    dataset = LeRobotDataset(REPO_NAME, root=str(dataset_root))
+    dataset = LeRobotDataset(DATA_REPO_NAME, root=str(dataset_root))
     print("✅ Loaded existing dataset, will append new episodes")
 else:
     # Case 2: Dataset doesn't exist - create new one
     print("📝 No existing dataset found, creating new dataset...")
     dataset = LeRobotDataset.create(
-        repo_id=REPO_NAME,
+        repo_id=DATA_REPO_NAME,
         root=str(dataset_root),
         fps=FPS,
         features=dataset_features,
@@ -65,11 +54,9 @@ else:
     )
     print("✅ Created new dataset")
 
-# Initialize the keyboard listener and rerun visualization
+
 _, events = init_keyboard_listener()
 init_rerun(session_name="recording")
-
-# Connect the robot and teleoperator
 robot.connect()
 teleop.connect()
 

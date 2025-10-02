@@ -48,7 +48,7 @@ grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 
 
 source ~/miniconda3/bin/activate; conda activate lerobot
 cd scratchpad
-python3 viser_record_a2.py
+python3 record_a2.py
 
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
 # Train dataset

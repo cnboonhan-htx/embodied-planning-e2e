@@ -24,8 +24,8 @@ from lerobot.datasets.utils import build_dataset_frame, combine_feature_dicts
 
 # Using grpcurl instead of gRPC imports
 
-POLICY_PATH = "cnboonhan-htx/a2_diffusion_wave_right_hand"
-REPO_NAME = "cnboonhan-htx/a2-wave-2909-right-hand"
+POLICY_PATH = "cnboonhan-htx/a2-pnp-3009-right-hand-diffusion"
+REPO_NAME = "cnboonhan-htx/a2-pnp-3009-right-hand"
 FPS = 15
 TASK = "wave"
 ROBOT_SERVER_GRPC_URL = "localhost:5000"
@@ -85,7 +85,9 @@ def map_action_values_to_joints(action_values):
     joint_names = [
         "idx20_right_arm_joint1", "idx21_right_arm_joint2", 
         "idx22_right_arm_joint3", "idx23_right_arm_joint4", "idx24_right_arm_joint5", 
-        "idx25_right_arm_joint6", "idx26_right_arm_joint7"
+        "idx25_right_arm_joint6", "idx26_right_arm_joint7",
+        "right_thumb_0", "right_thumb_1", "right_index", "right_middle", 
+        "right_ring", "right_pinky"
     ]
     
     joint_updates = {}
