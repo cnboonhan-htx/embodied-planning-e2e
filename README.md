@@ -8,6 +8,7 @@ cd embodied-ai-toolkit; uv venv; uv sync; cd ..
 cd humanoid-joint-teleop; uv venv; uv sync; cd ..
 
 # create lerobot: https://github.com/huggingface/lerobot
+conda install ffmpeg=7.1.1 -c conda-forge
 pip install 'lerobot[feetech]' 
 ```
 
@@ -55,7 +56,7 @@ python3 src/record_a2.py
 
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
 # Train dataset
-lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand --policy.type=diffusion --output_dir=outputs/train/cnboonhan-htx/a2-pnp-3009-right-hand --job_name=a2-pip-3009-right-hand --policy.device=cuda --wandb.enable=true --policy.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand
+lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand --policy.type=diffusion --output_dir=outputs/train/cnboonhan-htx/a2-pnp-3009-right-hand --job_name=a2-pip-3009-right-hand --policy.device=cuda --wandb.enable=false --policy.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand
 
 # Inference
 python3 src/inference_a2.py
