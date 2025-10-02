@@ -120,6 +120,13 @@ camera_config = {
         width=640,
         height=480,
         fps=30,
+    ),
+    "phone": OpenCVCameraConfig(
+        index_or_path=6,
+        width=640,
+        height=480,
+        fps=30,
+        color_mode=ColorMode.RGB,
     )
 }
 

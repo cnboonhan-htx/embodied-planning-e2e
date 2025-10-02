@@ -18,7 +18,6 @@ EPISODE_TIME_SEC = 60
 RESET_TIME_SEC = 5
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
-camera = RealSenseCamera(camera_config["front"])
 robot = ViserFollower(camera_config)
 teleop = ViserLeader()
 action_features = hw_to_dataset_features(robot.action_features, "action")

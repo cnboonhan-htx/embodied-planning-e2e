@@ -46,6 +46,10 @@ grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 
 grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 rosbot_api.RobotApiService/StreamJointData | python3 ~/bh-new-teleop/ros2_streamer.py 
 # Start moving teleop!
 
+# Setup Camera
+sudo modprobe -r v4l2loopback
+# Follow the instructions at bottom of page: https://huggingface.co/docs/lerobot/en/cameras?use+phone=Linux
+
 source ~/miniconda3/bin/activate; conda activate lerobot
 python3 src/record_a2.py
 
