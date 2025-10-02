@@ -1,8 +1,0 @@
-{
-    "project_name": "so101_project",
-    "epsisode_name": "episode_i",
-    "label": "so101_actions",
-    "urdf_path": "so_arm100_description",
-    "api_port": 5000,
-    "urdf_viewer_port": 8080
-}
