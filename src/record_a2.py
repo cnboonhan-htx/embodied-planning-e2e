@@ -10,16 +10,12 @@ from utils_a2 import record_loop
 from lerobot.processor.factory import make_default_processors
 from lerobot.cameras.configs import ColorMode, Cv2Rotation
 from pathlib import Path
-from utils_a2 import ViserFollower, ViserLeader, camera_config
-
+from utils_a2 import ViserFollower, ViserLeader, camera_config, TASK_DESCRIPTION, POLICY_REPO_NAME, DATA_REPO_NAME
 
 NUM_EPISODES = 25
 FPS = 15
 EPISODE_TIME_SEC = 60
 RESET_TIME_SEC = 5
-TASK_DESCRIPTION = "My task description"
-POLICY_REPO_NAME = "cnboonhan-htx/example"
-DATA_REPO_NAME = "cnboonhan-htx/example"
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
 camera = RealSenseCamera(camera_config["front"])

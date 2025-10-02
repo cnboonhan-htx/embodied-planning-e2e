@@ -21,18 +21,16 @@ from lerobot.utils.utils import (
     get_safe_torch_device
 )
 from lerobot.datasets.utils import build_dataset_frame, combine_feature_dicts
-from utils_a2 import ROBOT_JOINT_MAPPING, camera_config
+from utils_a2 import ROBOT_JOINT_MAPPING, camera_config, TASK_DESCRIPTION, POLICY_REPO_NAME, DATA_REPO_NAME
 
 logger = logging.getLogger(__name__)
 
 # Using grpcurl instead of gRPC imports
 
-POLICY_PATH = "cnboonhan-htx/a2-pnp-3009-right-hand"
-REPO_NAME = "cnboonhan-htx/a2-pnp-3009-right-hand"
 FPS = 15
 TASK = "wave"
 ROBOT_SERVER_GRPC_URL = "localhost:5000"
-print(f"Loading policy from {POLICY_PATH}")
+print(f"Loading policy from {POLICY_REPO_NAME}")
 
 def send_joint_updates_grpc(joint_updates):
     """Send joint updates to the robot server using grpcurl."""
@@ -97,10 +95,10 @@ def map_action_values_to_joints(action_values):
     return joint_updates
 
 # Load policy configuration
-policy_cfg = PreTrainedConfig.from_pretrained(pretrained_name_or_path=POLICY_PATH)
-dataset_root = Path(f"/home/cnboonhan/data_collection/{REPO_NAME}").expanduser()
+policy_cfg = PreTrainedConfig.from_pretrained(pretrained_name_or_path=POLICY_REPO_NAME)
+dataset_root = Path(f"/home/cnboonhan/data_collection/{DATA_REPO_NAME}").expanduser()
 dataset_exists = dataset_root.exists() and (dataset_root / "meta" / "info.json").exists()
-dataset = LeRobotDataset(REPO_NAME, root=str(dataset_root))
+dataset = LeRobotDataset(DATA_REPO_NAME, root=str(dataset_root))
 policy: PreTrainedPolicy = make_policy(policy_cfg, ds_meta=dataset.meta)
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
@@ -113,7 +111,7 @@ print("✅ Ready to send joint updates via grpcurl!")
 
 preprocessor, postprocessor = make_pre_post_processors(
     policy_cfg,
-    pretrained_path=POLICY_PATH,
+    pretrained_path=POLICY_REPO_NAME,
 )
 
 policy.reset()

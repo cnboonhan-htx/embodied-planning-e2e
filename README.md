@@ -47,13 +47,12 @@ grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 
 # Start moving teleop!
 
 source ~/miniconda3/bin/activate; conda activate lerobot
-cd scratchpad
-python3 record_a2.py
+python3 src/record_a2.py
 
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
 # Train dataset
 lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand --policy.type=diffusion --output_dir=outputs/train/cnboonhan-htx/a2-pnp-3009-right-hand --job_name=a2-pip-3009-right-hand --policy.device=cuda --wandb.enable=true --policy.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand
 
 # Inference
-python3 inference_a2.py
+python3 src/inference_a2.py
 ```
