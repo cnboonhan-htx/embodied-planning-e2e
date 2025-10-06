@@ -53,12 +53,12 @@ grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 
 
 # Setup Camera
 sudo modprobe -r v4l2loopback
-flatpak run com.obsproject.Studio
-# Follow the instructions at bottom of page: https://huggingface.co/docs/lerobot/en/cameras?use+phone=Linux
-
-# Optional: Stream Robot Camera View to /dev/videoX ( change X to the video device for Robot Camera View on OBS )
-ssh agibot-lan "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video2 -vcodec libx264 -preset veryfast -crf 
-23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/videoX
+sudo modprobe v4l2loopback devices=2 video_nr=8,9 exclusive_caps=1,1 card_label="HeadCam,Phone"
+sudo v4l2-ctl --list-devices
+# Stream Head Camera
+ssh agibot-lan "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video2 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video8
+# Stream Phone
+ffmpeg -f mjpeg -i http://[droidcam-ip]:4747/video   -vf scale=640:480 -f v4l2 -pix_fmt yuv420p /dev/video9
 # Use this command to test: ffplay -f v4l2 /dev/videoX
 
 source ~/miniconda3/bin/activate; conda activate lerobot

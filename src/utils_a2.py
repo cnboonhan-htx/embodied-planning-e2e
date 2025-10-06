@@ -121,8 +121,15 @@ camera_config = {
         height=480,
         fps=30,
     ),
+    "headcam": OpenCVCameraConfig(
+        index_or_path=8,
+        width=640,
+        height=480,
+        fps=30,
+        color_mode=ColorMode.RGB,
+    ),
     "phone": OpenCVCameraConfig(
-        index_or_path=0,
+        index_or_path=9,
         width=640,
         height=480,
         fps=30,
