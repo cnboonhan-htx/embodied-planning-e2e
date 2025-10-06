@@ -78,8 +78,8 @@ from lerobot.cameras.configs import ColorMode, Cv2Rotation
 logger = logging.getLogger(__name__)
 
 TASK_DESCRIPTION = "My task description"
-POLICY_REPO_NAME = "cnboonhan-htx/example"
-DATA_REPO_NAME = "cnboonhan-htx/example"
+POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-0610-right-hand"
+DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-0610-right-hand"
 ROBOT_JOINT_MAPPING = {
     # "idx13_left_arm_joint1": "idx13_left_arm_joint1",
     # "idx14_left_arm_joint2": "idx14_left_arm_joint2",
@@ -122,7 +122,7 @@ camera_config = {
         fps=30,
     ),
     "phone": OpenCVCameraConfig(
-        index_or_path=6,
+        index_or_path=0,
         width=640,
         height=480,
         fps=30,

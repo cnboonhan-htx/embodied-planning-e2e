@@ -10,6 +10,10 @@ cd humanoid-joint-teleop; uv venv; uv sync; cd ..
 # create lerobot: https://github.com/huggingface/lerobot
 conda install ffmpeg=7.1.1 -c conda-forge
 pip install 'lerobot[feetech]' 
+
+# Copy ffmpeg to Orin
+wget https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linuxarm64-gpl.tar.xz
+scp [file] agibot:~/ffmpeg-manual
 ```
 
 ## Run A2 Collection
@@ -49,7 +53,13 @@ grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 
 
 # Setup Camera
 sudo modprobe -r v4l2loopback
+flatpak run com.obsproject.Studio
 # Follow the instructions at bottom of page: https://huggingface.co/docs/lerobot/en/cameras?use+phone=Linux
+
+# Optional: Stream Robot Camera View to /dev/videoX ( change X to the video device for Robot Camera View on OBS )
+ssh agibot-lan "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video2 -vcodec libx264 -preset veryfast -crf 
+23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/videoX
+# Use this command to test: ffplay -f v4l2 /dev/videoX
 
 source ~/miniconda3/bin/activate; conda activate lerobot
 python3 src/record_a2.py
