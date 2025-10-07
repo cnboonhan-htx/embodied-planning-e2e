@@ -104,9 +104,9 @@ ROBOT_JOINT_MAPPING = {
     "right_thumb_0": "right_thumb_0",
     "right_thumb_1": "right_thumb_1",
     "right_index": "right_index",
-    "right_middle": "right_middle",
-    "right_ring": "right_ring",
-    "right_pinky": "right_pinky",
+    # "right_middle": "right_middle",
+    # "right_ring": "right_ring",
+    # "right_pinky": "right_pinky",
 }
 
 # Camera configuration
