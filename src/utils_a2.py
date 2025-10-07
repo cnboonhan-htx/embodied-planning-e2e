@@ -113,16 +113,16 @@ ROBOT_JOINT_MAPPING = {
 
 # Camera configuration
 camera_config = {
-    "front": RealSenseCameraConfig(
-        "211622068536",
-        ColorMode.RGB,
-        False,
-        Cv2Rotation.NO_ROTATION,
-        0,
-        width=640,
-        height=480,
-        fps=30,
-    ),
+    # "front": RealSenseCameraConfig(
+    #     "211622068536",
+    #     ColorMode.RGB,
+    #     False,
+    #     Cv2Rotation.NO_ROTATION,
+    #     0,
+    #     width=640,
+    #     height=480,
+    #     fps=30,
+    # ),
     "headcam": OpenCVCameraConfig(
         index_or_path=8,
         width=640,
@@ -130,7 +130,7 @@ camera_config = {
         fps=30,
         color_mode=ColorMode.RGB,
     ),
-    "phone": OpenCVCameraConfig(
+    "sidecam": OpenCVCameraConfig(
         index_or_path=9,
         width=640,
         height=480,
