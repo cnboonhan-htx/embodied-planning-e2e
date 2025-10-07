@@ -5,6 +5,16 @@
     "urdf_path": "/home/cnboonhan/teleop_workspace/genie_robot_description/urdf/raise_a2_t2d0_flagship/model.urdf",
     "custom_joints": [
         {
+            "name": "idx27_head_joint1",
+            "type": "revolute",
+            "limits": [-0.7, 0.7]
+        },
+        {
+            "name": "idx28_head_joint2",
+            "type": "revolute",
+            "limits": [-0.4, 0.4]
+        },
+        {
             "name": "left_thumb_0",
             "type": "revolute",
             "limits": [0.0, 2000.0]

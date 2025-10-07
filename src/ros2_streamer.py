@@ -28,6 +28,7 @@ class ROS2Streamer(Node):
         self.declare_parameter('update_frequency', 100.0)
         self.declare_parameter('max_arm_joint_change_rad', 0.2)  # Maximum change in radians per update for arm joints
         self.declare_parameter('max_hand_joint_change_rad', 200)  # Maximum change in radians per update for hand joints
+        self.declare_parameter('max_neck_joint_change_rad', 0.2)  # Maximum change in radians per update for neck joints
         self.declare_parameter('grpc_server_endpoint', 'localhost:5001')  # gRPC server endpoint for joint updates
         self.declare_parameter('arm_joint_names', 
             [
@@ -63,20 +64,30 @@ class ROS2Streamer(Node):
                 'right_pinky',
             ]
         )
+        self.declare_parameter('neck_joint_names', 
+            [
+                'idx27_head_joint1',
+                'idx28_head_joint2',
+            ]
+        )
         
         # Get parameters
         self.update_frequency = self.get_parameter('update_frequency').value
         self.max_arm_joint_change_rad = self.get_parameter('max_arm_joint_change_rad').value
         self.max_hand_joint_change_rad = self.get_parameter('max_hand_joint_change_rad').value
+        self.max_neck_joint_change_rad = self.get_parameter('max_neck_joint_change_rad').value
         self.grpc_server_endpoint = self.get_parameter('grpc_server_endpoint').value
         self.arm_joint_names = self.get_parameter('arm_joint_names').value
         self.hand_joint_names = self.get_parameter('hand_joint_names').value
+        self.neck_joint_names = self.get_parameter('neck_joint_names').value
         
         # Initialize joint state storage
         self.arm_joint_state = JointState()
         self.hand_joint_state = JointState()
+        self.neck_joint_state = JointState()
         self.latest_arm_joint_state = None
         self.latest_hand_joint_state = None
+        self.latest_neck_joint_state = None
         
         # Initialize previous command states for change limiting
         # (Will use current joint states from subscriptions instead)
@@ -107,6 +118,11 @@ class ROS2Streamer(Node):
             '/motion/control/hand_joint_command', 
             10
         )
+        self.neck_joint_pub = self.create_publisher(
+            JointState, 
+            '/motion/control/neck_joint_command', 
+            10
+        )
         
         # Setup subscribers
         self.arm_joint_sub = self.create_subscription(
@@ -119,6 +135,12 @@ class ROS2Streamer(Node):
             JointState,
             '/motion/control/hand_joint_state',
             self.hand_joint_callback,
+            qos
+        )
+        self.neck_joint_sub = self.create_subscription(
+            JointState,
+            '/motion/control/neck_joint_state',
+            self.neck_joint_callback,
             qos
         )
         
@@ -303,6 +325,17 @@ class ROS2Streamer(Node):
                     hand_positions.append(value)
                     hand_names.append(joint_name)
             
+            # Process neck joints - use neck_joint_names from customJointPositions
+            neck_positions = []
+            neck_names = []
+            
+            for joint_name in self.neck_joint_names:
+                if joint_name in custom_joint_positions:
+                    # Ensure the value is a float
+                    value = float(custom_joint_positions[joint_name])
+                    neck_positions.append(value)
+                    neck_names.append(joint_name)
+            
             # Create and publish arm joint command
             if arm_names:
                 # Limit joint changes based on current joint state
@@ -352,6 +385,31 @@ class ROS2Streamer(Node):
                     print("---")
                 else:
                     self.get_logger().warn('Skipping hand command publish - no current hand state available')
+
+            # Create and publish neck joint command
+            if neck_names:
+                # Limit joint changes based on current joint state
+                limited_neck_positions = self.limit_joint_changes(
+                    neck_names, neck_positions, self.latest_neck_joint_state, self.max_neck_joint_change_rad
+                )
+                
+            # Only proceed if we have limited positions (current state was available)
+            if limited_neck_positions is not None:
+                neck_command = JointState()
+                neck_command.header.stamp = self.get_clock().now().to_msg()
+                neck_command.name = neck_names
+                neck_command.position = limited_neck_positions
+                neck_command.velocity = [0.0] * len(neck_names)  # Default velocity
+                neck_command.effort = [0.0] * len(neck_names)    # Default effort
+
+                self.neck_joint_pub.publish(neck_command)
+                self.get_logger().info(f'NECK COMMAND - Names: {neck_names}')
+                self.get_logger().info(f'NECK COMMAND - Positions: {limited_neck_positions}')
+                print(f"NECK COMMAND - Names: {neck_names}")
+                print(f"NECK COMMAND - Positions: {limited_neck_positions}")
+                print("---")
+            else:
+                self.get_logger().warn('Skipping neck command publish - no current neck state available')
             
         except Exception as e:
             self.get_logger().error(f'Error processing JSON joint state: {e}')
@@ -368,6 +426,12 @@ class ROS2Streamer(Node):
         self.latest_hand_joint_state = msg
         self.hand_joint_state = msg
         self.get_logger().debug(f'Received hand joint state: {len(msg.name)} joints')
+
+    def neck_joint_callback(self, msg: JointState):
+        """Callback for neck joint state subscription."""
+        self.latest_neck_joint_state = msg
+        self.neck_joint_state = msg
+        self.get_logger().debug(f'Received neck joint state: {len(msg.name)} joints')
     
     def timer_callback(self):
         """Periodic timer callback for monitoring and maintenance."""
@@ -394,6 +458,10 @@ class ROS2Streamer(Node):
     def get_latest_hand_state(self) -> Optional[JointState]:
         """Get the latest hand joint state."""
         return self.latest_hand_joint_state
+
+    def get_latest_neck_state(self) -> Optional[JointState]:
+        """Get the latest neck joint state."""
+        return self.latest_neck_joint_state
     
     def limit_joint_changes(self, joint_names: List[str], target_positions: List[float], 
                           current_state: Optional[JointState], max_change: float) -> Optional[List[float]]:
@@ -457,6 +525,12 @@ class ROS2Streamer(Node):
                 for i, joint_name in enumerate(self.latest_hand_joint_state.name):
                     if i < len(self.latest_hand_joint_state.position):
                         joint_updates[joint_name] = self.latest_hand_joint_state.position[i]
+
+            # Add neck joint states
+            if self.latest_neck_joint_state:
+                for i, joint_name in enumerate(self.latest_neck_joint_state.name):
+                    if i < len(self.latest_neck_joint_state.position):
+                        joint_updates[joint_name] = self.latest_neck_joint_state.position[i]
             
             if not joint_updates:
                 self.get_logger().warn('No joint states available for gRPC update')
@@ -505,6 +579,11 @@ class ROS2Streamer(Node):
             self.get_logger().info(f'Latest HAND STATE - {len(self.latest_hand_joint_state.name)} joints: {self.latest_hand_joint_state.name[:3]}...')
         else:
             self.get_logger().info('Latest HAND STATE - No data received yet')
+
+        if self.latest_neck_joint_state:
+            self.get_logger().info(f'Latest NECK STATE - {len(self.latest_neck_joint_state.name)} joints: {self.latest_neck_joint_state.name[:3]}...')
+        else:
+            self.get_logger().info('Latest NECK STATE - No data received yet')
     
     def shutdown(self):
         """Clean shutdown of the node."""

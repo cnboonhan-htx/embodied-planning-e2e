@@ -36,6 +36,7 @@ class ROS2StatePublisher(Node):
         # Initialize joint state storage
         self.latest_arm_joint_state = None
         self.latest_hand_joint_state = None
+        self.latest_neck_joint_state = None
         
         # Setup QoS
         qos = QoSProfile(
@@ -55,6 +56,12 @@ class ROS2StatePublisher(Node):
             JointState,
             '/motion/control/hand_joint_state',
             self.hand_joint_callback,
+            qos
+        )
+        self.neck_joint_sub = self.create_subscription(
+            JointState,
+            '/motion/control/neck_joint_state',
+            self.neck_joint_callback,
             qos
         )
         
@@ -81,6 +88,11 @@ class ROS2StatePublisher(Node):
         self.latest_hand_joint_state = msg
         self.get_logger().debug(f'Received hand joint state: {len(msg.name)} joints')
     
+    def neck_joint_callback(self, msg: JointState):
+        """Callback for neck joint state subscription."""
+        self.latest_neck_joint_state = msg
+        self.get_logger().debug(f'Received neck joint state: {len(msg.name)} joints')
+    
     def timer_callback(self):
         """Periodic timer callback for monitoring and maintenance."""
         # Increment timer counter
@@ -104,6 +116,10 @@ class ROS2StatePublisher(Node):
         """Get the latest hand joint state."""
         return self.latest_hand_joint_state
     
+    def get_latest_neck_state(self) -> Optional[JointState]:
+        """Get the latest neck joint state."""
+        return self.latest_neck_joint_state
+    
     def update_grpc_joint_states(self):
         """Update joint states on the gRPC server using grpcurl."""
         try:
@@ -121,6 +137,12 @@ class ROS2StatePublisher(Node):
                 for i, joint_name in enumerate(self.latest_hand_joint_state.name):
                     if i < len(self.latest_hand_joint_state.position):
                         joint_updates[joint_name] = self.latest_hand_joint_state.position[i]
+            
+            # Add neck joint states
+            if self.latest_neck_joint_state:
+                for i, joint_name in enumerate(self.latest_neck_joint_state.name):
+                    if i < len(self.latest_neck_joint_state.position):
+                        joint_updates[joint_name] = self.latest_neck_joint_state.position[i]
             
             if not joint_updates:
                 self.get_logger().warn('No joint states available for gRPC update')
@@ -183,6 +205,16 @@ class ROS2StatePublisher(Node):
                 self.get_logger().info(f'  Sample positions: {hand_positions[:3]}...')
         else:
             self.get_logger().info('Latest HAND STATE - No data received yet')
+            
+        if self.latest_neck_joint_state:
+            neck_names = self.latest_neck_joint_state.name
+            neck_positions = self.latest_neck_joint_state.position
+            self.get_logger().info(f'Latest NECK STATE - {len(neck_names)} joints')
+            self.get_logger().info(f'  Joint names: {neck_names[:3]}...' + (f' (and {len(neck_names)-3} more)' if len(neck_names) > 3 else ''))
+            if neck_positions:
+                self.get_logger().info(f'  Sample positions: {neck_positions[:3]}...')
+        else:
+            self.get_logger().info('Latest NECK STATE - No data received yet')
         
         # Log timer statistics
         uptime_seconds = self._timer_count / self.timer_frequency
