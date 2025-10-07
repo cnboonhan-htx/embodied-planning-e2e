@@ -33,8 +33,10 @@ uv run humanoid-joint-teleop/teleop_arm.py
 # Check 127.0.0.1:8080 and move the teleop 
 
 # password is 1
+ssh-copy-id agi@192.168.2.50
 ssh agi@192.168.2.50 -R 5000:127.0.0.1:5000 -R 5001:127.0.0.1:5001
-x86
+aima em stop-app hal_sensor
+ssh-copy-id agi@192.168.100.100
 aima em stop-app motion_player
 aima em load-env
 python3 ~/bh-new-teleop/ros2_state_publisher.py
@@ -58,7 +60,7 @@ sudo v4l2-ctl --list-devices
 # Stream Head Camera
 ssh agibot-lan "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video2 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video8
 # Stream Phone
-ffmpeg -f mjpeg -i http://[droidcam-ip]:4747/video   -vf scale=640:480 -f v4l2 -pix_fmt yuv420p /dev/video9
+ffmpeg -f mjpeg -i http://192.168.50.102:4747/video   -vf scale=640:480 -f v4l2 -pix_fmt yuv420p /dev/video9
 # Use this command to test: ffplay -f v4l2 /dev/videoX
 
 source ~/miniconda3/bin/activate; conda activate lerobot
