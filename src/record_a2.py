@@ -12,10 +12,10 @@ from lerobot.cameras.configs import ColorMode, Cv2Rotation
 from pathlib import Path
 from utils_a2 import ViserFollower, ViserLeader, camera_config, TASK_DESCRIPTION, POLICY_REPO_NAME, DATA_REPO_NAME
 
-NUM_EPISODES = 25
-FPS = 15
+NUM_EPISODES = 1
+FPS = 30
 EPISODE_TIME_SEC = 60
-RESET_TIME_SEC = 5
+RESET_TIME_SEC = 10
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
 robot = ViserFollower(camera_config)

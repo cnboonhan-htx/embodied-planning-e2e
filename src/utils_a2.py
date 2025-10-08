@@ -77,9 +77,9 @@ from lerobot.cameras.configs import ColorMode, Cv2Rotation
 
 logger = logging.getLogger(__name__)
 
-TASK_DESCRIPTION = f"ACT Policy for reaching for a clear plastic roll"
-POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-0610-right-hand"
-DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-0610-right-hand"
+TASK_DESCRIPTION = f"grab and lift the dog"
+POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-0810-right-hand-lift"
+DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-0810-right-hand-lift"
 ROBOT_JOINT_MAPPING = {
     # "idx13_left_arm_joint1": "idx13_left_arm_joint1",
     # "idx14_left_arm_joint2": "idx14_left_arm_joint2",
@@ -130,11 +130,12 @@ camera_config = {
         fps=30,
         color_mode=ColorMode.RGB,
     ),
-    "sidecam": OpenCVCameraConfig(
+    "wristcam": OpenCVCameraConfig(
         index_or_path=9,
         width=640,
         height=480,
         fps=30,
+        # rotation=Cv2Rotation.ROTATE_180,
         color_mode=ColorMode.RGB,
     )
 }

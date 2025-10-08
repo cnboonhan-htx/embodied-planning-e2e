@@ -14,6 +14,9 @@ pip install 'lerobot[feetech]'
 # Copy ffmpeg to Orin
 wget https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linuxarm64-gpl.tar.xz
 scp [file] agibot:~/ffmpeg-manual
+
+# set up usb
+# Copy 99-webcam.rules to /etc/udev/rules.d in orin
 ```
 
 ## Run A2 Collection
@@ -37,6 +40,7 @@ ssh-copy-id agi@192.168.2.50
 ssh agi@192.168.2.50 -R 5000:127.0.0.1:5000 -R 5001:127.0.0.1:5001
 aima em stop-app hal_sensor
 ssh-copy-id agi@192.168.100.100
+x86
 aima em stop-app motion_player
 aima em load-env
 python3 ~/bh-new-teleop/ros2_state_publisher.py
@@ -55,21 +59,27 @@ grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 
 
 # Setup Camera
 sudo modprobe -r v4l2loopback
-sudo modprobe v4l2loopback devices=2 video_nr=8,9 exclusive_caps=1,1 card_label="HeadCam,Phone"
+sudo modprobe v4l2loopback devices=2 video_nr=8,9 exclusive_caps=1,1 card_label="HeadCam,WristCam"
 sudo v4l2-ctl --list-devices
 # Stream Head Camera
-ssh agibot-lan "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video2 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video8
-# Stream Phone
-ffmpeg -f mjpeg -i http://192.168.50.102:4747/video   -vf scale=640:480 -f v4l2 -pix_fmt yuv420p /dev/video9
-# Use this command to test: ffplay -f v4l2 /dev/videoX
+ssh agi@192.168.2.50 "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video2 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video8
+
+# Stream Wrist Camera
+ssh agi@192.168.2.50 "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video10 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video9
+
+# Test Cameras
+ffplay -f v4l2 /dev/video8
+ffplay -f v4l2 /dev/video9
 
 source ~/miniconda3/bin/activate; conda activate lerobot
 python3 src/record_a2.py
 
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
 # Train dataset
-lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand --policy.type=diffusion --output_dir=outputs/train/cnboonhan-htx/a2-pnp-3009-right-hand --job_name=a2-pip-3009-right-hand --policy.device=cuda --wandb.enable=false --policy.repo_id=cnboonhan-htx/a2-pnp-3009-right-hand
+
+lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-lift --policy.type=act --output_dir=outputs/train/cnboonhan-htx/a2-pnp-0810-right-hand-pet --job_name=a2-pnp-0810-right-hand-pet --policy.device=cuda --wandb.enable=false --policy.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-pet
 
 # Inference
+source ~/miniconda3/bin/activate; conda activate lerobot
 python3 src/inference_a2.py
 ```

@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 # Using grpcurl instead of gRPC imports
 
-FPS = 15
+FPS = 0.5
 TASK = TASK_DESCRIPTION
 ROBOT_SERVER_GRPC_URL = "localhost:5000"
 print(f"Loading policy from {POLICY_REPO_NAME}")
@@ -100,9 +100,6 @@ dataset_root = Path(f"/home/cnboonhan/data_collection/{DATA_REPO_NAME}").expandu
 dataset_exists = dataset_root.exists() and (dataset_root / "meta" / "info.json").exists()
 dataset = LeRobotDataset(DATA_REPO_NAME, root=str(dataset_root))
 policy: PreTrainedPolicy = make_policy(policy_cfg, ds_meta=dataset.meta)
-policy.cuda()
-policy.eval()
-policy.reset()
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
 robot = ViserFollower(camera_config)
@@ -126,6 +123,8 @@ loop_counter = 0
 target_frame_time = 1.0 / FPS  # Target time per frame in seconds
     
 try:
+    loop_counter = 0
+
     while True:
         loop_start = time.perf_counter()
         obs = robot.get_observation()
@@ -141,15 +140,16 @@ try:
             task=TASK,
             robot_type="a2",
         )
-        print(action_values)
-
-        joint_updates = map_action_values_to_joints(action_values)
-        send_joint_updates_grpc(joint_updates)
-        
-        loop_duration = time.perf_counter() - loop_start
-        sleep_time = target_frame_time - loop_duration
-        if sleep_time > 0:
-            time.sleep(sleep_time)
+        if loop_counter == 8:
+            joint_updates = map_action_values_to_joints(action_values)
+            send_joint_updates_grpc(joint_updates)
+            loop_duration = time.perf_counter() - loop_start
+            sleep_time = target_frame_time - loop_duration
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+            loop_counter = 0
+        else:
+            loop_counter += 1
         
     
 except KeyboardInterrupt:
