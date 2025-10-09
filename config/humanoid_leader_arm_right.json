@@ -2,57 +2,57 @@
     "motor_1": {
         "id": 1,
         "drive_mode": 0,
-        "homing_offset": -59,
-        "range_min": 767,
-        "range_max": 3567
+        "homing_offset": 72,
+        "range_min": 692,
+        "range_max": 3457
     },
     "motor_2": {
         "id": 2,
         "drive_mode": 0,
-        "homing_offset": 810,
-        "range_min": 938,
-        "range_max": 3581
+        "homing_offset": 726,
+        "range_min": 1133,
+        "range_max": 3562
     },
     "motor_3": {
         "id": 3,
         "drive_mode": 0,
-        "homing_offset": -1027,
-        "range_min": 959,
-        "range_max": 3322
+        "homing_offset": -837,
+        "range_min": 783,
+        "range_max": 3123
     },
     "motor_4": {
         "id": 4,
         "drive_mode": 0,
-        "homing_offset": -964,
-        "range_min": 1302,
-        "range_max": 3113
+        "homing_offset": -1050,
+        "range_min": 1408,
+        "range_max": 3194
     },
     "motor_5": {
         "id": 5,
         "drive_mode": 0,
-        "homing_offset": -280,
-        "range_min": 1056,
-        "range_max": 3360
+        "homing_offset": -602,
+        "range_min": 714,
+        "range_max": 3304
     },
     "motor_6": {
         "id": 6,
         "drive_mode": 0,
-        "homing_offset": 291,
-        "range_min": 1431,
-        "range_max": 2482
+        "homing_offset": 187,
+        "range_min": 1525,
+        "range_max": 2541
     },
     "motor_7": {
         "id": 7,
         "drive_mode": 0,
-        "homing_offset": -846,
-        "range_min": 1671,
-        "range_max": 2395
+        "homing_offset": -733,
+        "range_min": 1557,
+        "range_max": 2282
     },
     "motor_8": {
         "id": 8,
         "drive_mode": 0,
-        "homing_offset": -1289,
-        "range_min": 1770,
-        "range_max": 2126
+        "homing_offset": -1343,
+        "range_min": 1861,
+        "range_max": 2168
     }
 }

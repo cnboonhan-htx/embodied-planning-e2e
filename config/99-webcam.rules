@@ -1,0 +1,1 @@
+KERNEL=="video[0-9]*", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="32e6", ATTRS{idProduct}=="9221", ATTRS{serial}=="240729163401", SYMLINK+="webcam-240729163401"

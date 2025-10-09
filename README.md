@@ -77,7 +77,7 @@ python3 src/record_a2.py
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
 # Train dataset
 
-lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-lift --policy.type=act --output_dir=outputs/train/cnboonhan-htx/a2-pnp-0810-right-hand-pet --job_name=a2-pnp-0810-right-hand-pet --policy.device=cuda --wandb.enable=false --policy.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-pet
+lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-lift --policy.type=act --output_dir=outputs/train/cnboonhan-htx/a2-pnp-0810-right-hand-lift --job_name=a2-pnp-0810-right-hand-lift --policy.device=cuda --wandb.enable=false --policy.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-lift
 
 # Inference
 source ~/miniconda3/bin/activate; conda activate lerobot
