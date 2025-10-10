@@ -54,7 +54,7 @@ aima em load-env
 grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 rosbot_api.RobotApiService/StreamJointData | python3 ~/bh-new-teleop/ros2_streamer_slow.py 
 [Ctrl-C]
 ## HAND WILL MOVE QUICKLY
-grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 rosbot_api.RobotApiService/StreamJointData | python3 ~/bh-new-teleop/ros2_streamer.py 
+grpcurl -format json -plaintext -d '{"update_frequency": 100.0}' localhost:5000 rosbot_api.RobotApiService/StreamJointData | python3 ~/bh-new-teleop/ros2_streamer_mid.py 
 # Start moving teleop!
 
 # Setup Camera

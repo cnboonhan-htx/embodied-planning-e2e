@@ -77,9 +77,9 @@ from lerobot.cameras.configs import ColorMode, Cv2Rotation
 
 logger = logging.getLogger(__name__)
 
-TASK_DESCRIPTION = f"grab and lift the dog"
-POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-0810-right-hand-lift"
-DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-0810-right-hand-lift"
+TASK_DESCRIPTION = f"pick up the toy and place it in the bin"
+POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-1010-right-hand"
+DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-1010-right-hand"
 ROBOT_JOINT_MAPPING = {
     # "idx13_left_arm_joint1": "idx13_left_arm_joint1",
     # "idx14_left_arm_joint2": "idx14_left_arm_joint2",
@@ -93,8 +93,8 @@ ROBOT_JOINT_MAPPING = {
     "idx22_right_arm_joint3": "idx22_right_arm_joint3",
     "idx23_right_arm_joint4": "idx23_right_arm_joint4",
     "idx24_right_arm_joint5": "idx24_right_arm_joint5",
-    "idx25_right_arm_joint6": "idx25_right_arm_joint6",
-    "idx26_right_arm_joint7": "idx26_right_arm_joint7",
+    # "idx25_right_arm_joint6": "idx25_right_arm_joint6",
+    # "idx26_right_arm_joint7": "idx26_right_arm_joint7",
     # "left_thumb_0": "left_thumb_0",
     # "left_thumb_1": "left_thumb_1",
     # "left_index": "left_index",
@@ -102,11 +102,11 @@ ROBOT_JOINT_MAPPING = {
     # "left_ring": "left_ring",
     # "left_pinky": "left_pinky",
     "right_thumb_0": "right_thumb_0",
-    "right_thumb_1": "right_thumb_1",
-    "right_index": "right_index",
-    "right_middle": "right_middle",
-    "right_ring": "right_ring",
-    "right_pinky": "right_pinky",
+    # "right_thumb_1": "right_thumb_1",
+    # "right_index": "right_index",
+    # "right_middle": "right_middle",
+    # "right_ring": "right_ring",
+    # "right_pinky": "right_pinky",
     # "idx27_head_joint1": "idx27_head_joint1",
     # "idx28_head_joint2": "idx28_head_joint2",
 }
@@ -131,7 +131,7 @@ camera_config = {
         color_mode=ColorMode.RGB,
     ),
     "wristcam": OpenCVCameraConfig(
-        index_or_path=9,
+        index_or_path=0,
         width=640,
         height=480,
         fps=30,
