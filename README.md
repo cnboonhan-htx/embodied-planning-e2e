@@ -64,12 +64,13 @@ sudo v4l2-ctl --list-devices
 # Stream Head Camera
 ssh agi@192.168.2.50 "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video2 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video8
 
-# Stream Wrist Camera
-ssh agi@192.168.2.50 "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video10 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video9
+<!-- # Stream Wrist Camera - IGNORE FOR NOW, CURRENTLY USE DIRECT USB
+ssh agi@192.168.2.50 "/agibot/data/home/agi/ffmpeg-manual/ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg -f v4l2 -input_format yuyv422 -s 640x480 -i /dev/video10 -vcodec libx264 -preset veryfast -crf 23 -tune zerolatency -f mpegts -" | ffmpeg -i - -vcodec rawvideo -s 640x480 -vf format=yuv420p -f v4l2 /dev/video9 -->
 
 # Test Cameras
+ffplay -f v4l2 /dev/video0
 ffplay -f v4l2 /dev/video8
-ffplay -f v4l2 /dev/video9
+#ffplay -f v4l2 /dev/video9
 
 source ~/miniconda3/bin/activate; conda activate lerobot
 python3 src/record_a2.py
@@ -77,7 +78,7 @@ python3 src/record_a2.py
 # Inspect dataset: https://huggingface.co/spaces/lerobot/visualize_dataset
 # Train dataset
 
-lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-lift --policy.type=act --output_dir=outputs/train/cnboonhan-htx/a2-pnp-0810-right-hand-lift --job_name=a2-pnp-0810-right-hand-lift --policy.device=cuda --wandb.enable=false --policy.repo_id=cnboonhan-htx/a2-pnp-0810-right-hand-lift
+lerobot-train --dataset.repo_id=cnboonhan-htx/a2-pnp-1010-right-hand --policy.type=act --output_dir=outputs/train/cnboonhan-htx/a2-pnp-1010-right-hand --job_name=a2-pnp-1010-right-hand --policy.device=cuda --wandb.enable=false --policy.repo_id=cnboonhan-htx/a2-pnp-1010-right-hand --dataset.episodes=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49]
 
 # Inference
 source ~/miniconda3/bin/activate; conda activate lerobot

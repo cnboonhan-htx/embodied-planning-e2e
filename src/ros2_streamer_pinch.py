@@ -322,7 +322,13 @@ class ROS2Streamer(Node):
                 if joint_name in custom_joint_positions:
                     # Set _middle, _ring, and _pinky to 0, use original value for others
                     if '_middle' in joint_name or '_ring' in joint_name or '_pinky' in joint_name:
-                        value = 0.0
+                        value = 2000.0
+                    
+                    elif 'right_thumb_0' in joint_name or 'right_thumb_1' in joint_name:
+                        value = float(custom_joint_positions["right_thumb_0"])
+                    elif 'left_thumb_0' in joint_name or 'left_thumb_1' in joint_name:
+                        value = float(custom_joint_positions["left_thumb_0"])
+
                     else:
                         # Ensure the value is a float
                         value = float(custom_joint_positions[joint_name])

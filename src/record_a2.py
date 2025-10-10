@@ -14,8 +14,8 @@ from utils_a2 import ViserFollower, ViserLeader, camera_config, TASK_DESCRIPTION
 
 NUM_EPISODES = 1
 FPS = 30
-EPISODE_TIME_SEC = 60
-RESET_TIME_SEC = 10
+EPISODE_TIME_SEC = 120
+RESET_TIME_SEC = 20
 
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
 robot = ViserFollower(camera_config)
