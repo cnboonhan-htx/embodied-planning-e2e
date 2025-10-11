@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 # Using grpcurl instead of gRPC imports
 
-FPS = 15
+FPS = 10
 TASK = TASK_DESCRIPTION
 ROBOT_SERVER_GRPC_URL = "localhost:5000"
 print(f"Loading policy from {POLICY_REPO_NAME}")
@@ -73,6 +73,7 @@ def map_action_values_to_joints(action_values):
     joint_names = list(ROBOT_JOINT_MAPPING.keys())
     
     joint_updates = {}
+    print(f"Joint names: {joint_names}")
     print(f"Action values: {action_values}")
     
     # Handle different tensor shapes
@@ -91,7 +92,8 @@ def map_action_values_to_joints(action_values):
     for i, joint_name in enumerate(joint_names):
         if i < len(action_tensor):
             joint_updates[joint_name] = float(action_tensor[i])
-    
+
+    print(f"Joint updates: {joint_updates}")
     return joint_updates
 
 # Load policy configuration
@@ -124,13 +126,34 @@ postprocessor.reset()
 start_time = time.perf_counter()
 loop_counter = 0
 target_frame_time = 1.0 / FPS  # Target time per frame in seconds
+
+episode_frames = dataset.hf_dataset.filter(lambda x: x["episode_index"] == 1)
+actions = episode_frames.select_columns("action")
+action_array = actions[0]["action"]
+action = {}
+for i, name in enumerate(dataset.features["action"]["names"]):
+    action[name] = action_array[i]
+
+# Map action to joint updates
+joint_updates = map_action_values_to_joints(action_array)
+send_joint_updates_grpc(joint_updates)
+previous_joint_updates = joint_updates
     
+# counter = 5000
 try:
     while True:
         loop_start = time.perf_counter()
         obs = robot.get_observation()
         obs_processed = robot_observation_processor(obs)
+        # observation_frame = build_dataset_frame(dataset.features, obs_processed, prefix="observation")
+
+        # TEMP
+        # obs_processed['headcam'] = obs_processed['wristcam']
         observation_frame = build_dataset_frame(dataset.features, obs_processed, prefix="observation")
+        # observation_frame['observation.images.wristcam'] = dataset[counter]['observation.images.wristcam'].numpy().transpose((1, 2, 0))
+        # observation_frame['observation.images.headcam'] = dataset[counter]['observation.images.headcam'].numpy().transpose((1, 2, 0))
+        # TEMP
+
         action_values = predict_action(
             observation=observation_frame,
             policy=policy,
@@ -141,15 +164,36 @@ try:
             task=TASK,
             robot_type="a2",
         )
-        print(action_values)
 
         joint_updates = map_action_values_to_joints(action_values)
+        # Do an exponential smoothing of joint updates with previous_joint_updates
+        if previous_joint_updates:
+            alpha = 0.2  # Smoothing factor
+            for joint in joint_updates:
+                if joint in previous_joint_updates:
+                    joint_updates[joint] = alpha * joint_updates[joint] + (1 - alpha) * previous_joint_updates[joint]
         send_joint_updates_grpc(joint_updates)
-        
+        previous_joint_updates = joint_updates
         loop_duration = time.perf_counter() - loop_start
         sleep_time = target_frame_time - loop_duration
         if sleep_time > 0:
             time.sleep(sleep_time)
+        # counter += 1
+        input("Press Enter for next step...")
+
+        # while policy._action_queue:
+        #     input("Press Enter to send next action...")
+        #     loop_start = time.perf_counter()
+        #     print(f"⏭️ Processing queued action, {len(policy._action_queue)} left")
+        #     action = policy._action_queue.popleft().squeeze(0).to("cpu")
+        #     joint_updates = map_action_values_to_joints(action)
+        #     send_joint_updates_grpc(joint_updates)
+        #     loop_duration = time.perf_counter() - loop_start
+        #     sleep_time = target_frame_time - loop_duration
+        #     if sleep_time > 0:
+        #         time.sleep(sleep_time)
+
+        
         
     
 except KeyboardInterrupt:

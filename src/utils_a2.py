@@ -78,7 +78,7 @@ from lerobot.cameras.configs import ColorMode, Cv2Rotation
 logger = logging.getLogger(__name__)
 
 TASK_DESCRIPTION = f"pick up the toy and place it in the bin"
-POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-1010-right-hand"
+POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-3010-right-hand-50-action-smolvla"
 DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-1010-right-hand"
 ROBOT_JOINT_MAPPING = {
     # "idx13_left_arm_joint1": "idx13_left_arm_joint1",
