@@ -127,7 +127,9 @@ start_time = time.perf_counter()
 loop_counter = 0
 target_frame_time = 1.0 / FPS  # Target time per frame in seconds
 
-episode_frames = dataset.hf_dataset.filter(lambda x: x["episode_index"] == 1)
+input("Initializing robot to starting position... Press Enter to continue...")
+
+episode_frames = dataset.hf_dataset.filter(lambda x: x["episode_index"] == 2)
 actions = episode_frames.select_columns("action")
 action_array = actions[0]["action"]
 action = {}
@@ -138,8 +140,10 @@ for i, name in enumerate(dataset.features["action"]["names"]):
 joint_updates = map_action_values_to_joints(action_array)
 send_joint_updates_grpc(joint_updates)
 previous_joint_updates = joint_updates
+
+input("Robot initialized. Press Enter to start inference loop...")
     
-# counter = 5000
+counter = 5000
 try:
     while True:
         loop_start = time.perf_counter()
@@ -148,10 +152,10 @@ try:
         # observation_frame = build_dataset_frame(dataset.features, obs_processed, prefix="observation")
 
         # TEMP
-        # obs_processed['headcam'] = obs_processed['wristcam']
+        obs_processed['headcam'] = obs_processed['wristcam']
         observation_frame = build_dataset_frame(dataset.features, obs_processed, prefix="observation")
-        # observation_frame['observation.images.wristcam'] = dataset[counter]['observation.images.wristcam'].numpy().transpose((1, 2, 0))
-        # observation_frame['observation.images.headcam'] = dataset[counter]['observation.images.headcam'].numpy().transpose((1, 2, 0))
+        observation_frame['observation.images.wristcam'] = dataset[counter]['observation.images.wristcam'].numpy().transpose((1, 2, 0))
+        observation_frame['observation.images.headcam'] = dataset[counter]['observation.images.headcam'].numpy().transpose((1, 2, 0))
         # TEMP
 
         action_values = predict_action(
@@ -179,7 +183,7 @@ try:
         if sleep_time > 0:
             time.sleep(sleep_time)
         # counter += 1
-        input("Press Enter for next step...")
+        # input("Press Enter for next step...")
 
         # while policy._action_queue:
         #     input("Press Enter to send next action...")
