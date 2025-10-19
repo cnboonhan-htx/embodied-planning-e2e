@@ -7,3 +7,6 @@
 [submodule "humanoid-joint-teleop"]
 	path = humanoid-joint-teleop
 	url = https://github.com/cnboonhan-htx/humanoid-joint-teleop.git
+[submodule "GMR"]
+	path = GMR
+	url = https://github.com/YanjieZe/GMR.git
