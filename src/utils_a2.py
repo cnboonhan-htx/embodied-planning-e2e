@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from functools import cached_property
 import json
 import logging
@@ -78,8 +79,13 @@ from lerobot.cameras.configs import ColorMode, Cv2Rotation
 logger = logging.getLogger(__name__)
 
 TASK_DESCRIPTION = f"pick up the toy and place it in the bin"
-POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-3010-right-hand-50-action-smolvla"
-DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-1010-right-hand"
+# BH EDIT
+POLICY_REPO_NAME = "cnboonhan-htx/a2-pnp-0311"
+DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-0311"
+# -BH EDIT
+
+# POLICY_REPO_NAME= "cnboonhan-htx/a2-pnp-2210-right-hand-5-finger-clean-env-pick-place"
+# DATA_REPO_NAME = "cnboonhan-htx/a2-pnp-2210-right-hand-5-finger-clean-env-pick-place"
 ROBOT_JOINT_MAPPING = {
     # "idx13_left_arm_joint1": "idx13_left_arm_joint1",
     # "idx14_left_arm_joint2": "idx14_left_arm_joint2",
@@ -102,11 +108,11 @@ ROBOT_JOINT_MAPPING = {
     # "left_ring": "left_ring",
     # "left_pinky": "left_pinky",
     "right_thumb_0": "right_thumb_0",
-    # "right_thumb_1": "right_thumb_1",
-    # "right_index": "right_index",
-    # "right_middle": "right_middle",
-    # "right_ring": "right_ring",
-    # "right_pinky": "right_pinky",
+    "right_thumb_1": "right_thumb_1",
+    "right_index": "right_index",
+    "right_middle": "right_middle",
+    "right_ring": "right_ring",
+    "right_pinky": "right_pinky",
     # "idx27_head_joint1": "idx27_head_joint1",
     # "idx28_head_joint2": "idx28_head_joint2",
 }
@@ -124,14 +130,14 @@ camera_config = {
     #     fps=30,
     # ),
     "headcam": OpenCVCameraConfig(
-        index_or_path=8,
+        index_or_path="/dev/video8", # RH changed 8 to /dev/video8
         width=640,
         height=480,
         fps=30,
         color_mode=ColorMode.RGB,
     ),
     "wristcam": OpenCVCameraConfig(
-        index_or_path=0,
+        index_or_path="/dev/video0", # RH changed 0 to /dev/video0
         width=640,
         height=480,
         fps=30,
@@ -379,7 +385,7 @@ class ViserFollower(Robot):
 
                 while retry_count < max_retries:
                     try:
-                        observation[cam_key] = cam.async_read()
+                        observation[cam_key] = cam.read() # RH was here to change async_read() to read(), ensure camera is read
                         dt_ms = (time.perf_counter() - start) * 1e3
                         logger.debug(f"{self} read {cam_key}: {dt_ms:.1f}ms")
                         break  # Success, exit retry loop
@@ -398,7 +404,6 @@ class ViserFollower(Robot):
                     except Exception as e:
                         logger.warning(f"Error reading camera {cam_key}: {e}")
                         break  # Don't retry for other errors
-
             return observation
 
         except (

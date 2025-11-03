@@ -334,7 +334,7 @@ class ROS2Streamer(Node):
                         value = float(custom_joint_positions[joint_name])
                     hand_positions.append(value)
                     hand_names.append(joint_name)
-            
+        
             # Process neck joints - use neck_joint_names from customJointPositions
             neck_positions = []
             neck_names = []

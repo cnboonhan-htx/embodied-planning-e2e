@@ -2,7 +2,7 @@
     "project_name": "a2_teleop",
     "epsisode_name": "episode_1",
     "label": "action",
-    "urdf_path": "./GMR/assets/agibot_a2/urdf/model_with_finger.urdf",
+    "urdf_path": "/home/cnboonhan/teleop_workspace/genie_robot_description/urdf/raise_a2_t2d0_flagship/model.urdf",
     "custom_joints": [
         {
             "name": "idx27_head_joint1",

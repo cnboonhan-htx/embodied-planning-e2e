@@ -112,6 +112,8 @@ try:
     print(f"🎬 Starting replay of episode {EPISODE_NUMBER} with {len(episode_frames)} frames")
     
     for idx in range(len(episode_frames)):
+
+        input("Press Enter to send next action...")
         loop_start = time.perf_counter()
         
         # Get action from the episode data
